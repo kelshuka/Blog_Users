@@ -12,6 +12,9 @@ function PostDetails() {
     const [editCommentId, setEditCommentId] = useState(null);
     const [editCommentText, setEditCommentText] = useState('');
 
+    const [isLoading, setIsLoading] = useState(false);
+
+
     // Retrieve user info from localStorage
     const userId = localStorage.getItem('userId');  // Logged-in user's ID
     const userType = localStorage.getItem('userType');  // Logged-in user's type (User or Admin)
@@ -44,6 +47,7 @@ function PostDetails() {
     // Handle submitting a new comment
     const handleCommentSubmit = (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
         axiosInstance.post('/api/comments', {
             text: newComment,
@@ -56,7 +60,8 @@ function PostDetails() {
         .catch(error => {
             console.error('Error submitting comment:',  error.response?.data || error.message);
             setError('Error submitting comment');
-        });
+        })
+        .finally(() => setIsLoading(false));
     };
 
     //Handle Editing of Comments
@@ -67,19 +72,24 @@ function PostDetails() {
 
     const handleUpdateComment = (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
         axiosInstance.patch(`/api/comments/${editCommentId}`, { text: editCommentText })
             .then(response => {
+                const updatedComment = response.data;
+
                 const updatedComments = comments.map(comment =>
-                    comment.id === editCommentId ? response.data : comment
+                    comment.id === editCommentId ? updatedComment : comment
                 );
                 setComments(updatedComments);
                 setEditCommentId(null);  // Clear the edit form
                 setEditCommentText('');
+                window.location.reload();
             })
             .catch(error => {
                 console.error('Error updating comment:', error);
-            });
+            })
+            .finally(() => setIsLoading(false));
     };
 
     // Handle deleting a comment
@@ -101,12 +111,26 @@ function PostDetails() {
             <h2>{post.title}</h2>
             <p>{post.text}</p>
 
+            {isLoading && <p>Updating comment...</p>}
+
             <h3>Comments</h3>
             {comments.length > 0 ? (
                 <ul>
                     {comments.map(comment => (
                         <li key={comment.id}>
                             <p>{comment.text}</p>
+                            <small>
+                                {comment.commenter && comment.commenter.username ? (
+                                    <>
+                                        Commented by: {comment.commenter.username}
+                                        <br />
+                                        on {new Date(comment.createdAt).toLocaleString()}
+                                    </>
+                                ) : (
+                                    'Commenter information not available'
+                                )}
+                            </small>
+
                             {comment.commenterId === userId && (
                                 <button onClick={() => handleEdit(comment.id, comment.text)}>Edit</button>
                             )}

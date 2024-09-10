@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import { useNavigate } from 'react-router-dom';
+
 
 // My Back-end API URL
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function Logout() {
+
+    const navigate = useNavigate();
+
     const handleLogout = () => {
         localStorage.removeItem('userToken');  // Clear token from localStorage
         localStorage.removeItem('userType');
@@ -13,11 +18,11 @@ function Logout() {
         axios.get(`${BACKEND_URL}/log-out`)
         .then(response => {
             alert('Logged out successfully');
-            window.location.href = '/login';  // Or use react-router's useNavigate for routing
+            navigate('/login');
         })
         .catch(error => {
             console.error('Logout error:', error);
-            window.location.href = '/login';
+            navigate('/login');
         });
     };
 

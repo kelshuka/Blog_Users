@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import axiosInstance from '../api';
 
+import { useNavigate } from 'react-router-dom';
+
 
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+
+    const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -19,7 +23,7 @@ function Login() {
                 localStorage.setItem('userType', user.type);  // Store user type
                 localStorage.setItem('userId', user.id);  // Store the user ID
                 alert('Login successful');
-                window.location.href = '/allposts';
+                navigate('/blogPage/allposts');
             } else {
                 throw new Error('User data is missing in response');
             }
