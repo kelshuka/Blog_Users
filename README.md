@@ -1,8 +1,13 @@
-# React + Vite
+# Blog_Users
+This is the users front-end, built with React. Users can perform CRUD on their respective comments.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Blog_API
+This is a RESTful API that allows us to write, store and retrieve the blog's data.
 
-Currently, two official plugins are available:
+This is one of of the three parts that make up the Blog App. It is the Blog app back-end.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Content Management System
+This is the second part, a React front-end, which gives the admin sole authorization to all CRUD actions on posts.
+The source code can be found at [Blog_Admin](https://github.com/kelshuka/Blog_Admin.git).
+
+
