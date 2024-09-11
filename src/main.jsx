@@ -12,7 +12,7 @@ import SignUp from "./components/signUp";
 import App from './App.jsx'
 import HomePage from './Homepage.jsx';
 import PageNotFound from './components/pageNotFound.jsx';
-//import './index.css'
+import './output.css'
 
 
 

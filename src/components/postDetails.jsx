@@ -24,7 +24,7 @@ function PostDetails() {
     useEffect(() => {
         axiosInstance.get(`/api/posts/${postId}`)
             .then(response => {
-                setPost(response.data);
+                setPost(response.data.post);
             })
             .catch(error => {
                 console.error('Error fetching post:', error);
@@ -55,7 +55,8 @@ function PostDetails() {
         })
         .then(response => {
             setComments([...comments, response.data]);  
-            setNewComment('');  
+            setNewComment('');        
+            window.location.reload();  
         })
         .catch(error => {
             console.error('Error submitting comment:',  error.response?.data || error.message);
@@ -105,67 +106,82 @@ function PostDetails() {
     };
 
     if (!post) return <p>Loading...</p>;
+    /* className="bg-white p-8 rounded-lg shadow" */
 
     return (
-        <div>
-            <h2>{post.title}</h2>
-            <p>{post.text}</p>
+        <div className="w-full flex justify-around h-screen">
+            <div >
+                <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
+                <p className="text-sm text-gray-500 mb-4">
+                    {post.author && post.author.username ? (
+                        <>By {post.author.username}</>
+                    ) : (
+                        <>Unknown Author</>
+                    )}
+                </p>
+                <p className="text-gray-800">{post.text}</p>
+            </div>
 
-            {isLoading && <p>Updating comment...</p>}
+            <div>
+                {isLoading && <p>Updating comment...</p>}
 
-            <h3>Comments</h3>
-            {comments.length > 0 ? (
-                <ul>
-                    {comments.map(comment => (
-                        <li key={comment.id}>
-                            <p>{comment.text}</p>
-                            <small>
-                                {comment.commenter && comment.commenter.username ? (
-                                    <>
-                                        Commented by: {comment.commenter.username}
-                                        <br />
-                                        on {new Date(comment.createdAt).toLocaleString()}
-                                    </>
-                                ) : (
-                                    'Commenter information not available'
-                                )}
-                            </small>
+                <h3 className="text-lg font-bold text-center">Comments</h3>
+                {comments.length > 0 ? (
+                    <ul className="flex flex-col flex-gap">
+                        {comments.map(comment => (
+                            <li key={comment.id}>
+                                <p className="font-style">{comment.text}</p>
+                                <small>
+                                    {comment.commenter && comment.commenter.username ? (
+                                        <>
+                                            Commented by: {comment.commenter.username}
+                                            <br />
+                                            on {new Date(comment.createdAt).toLocaleString()}
+                                        </>
+                                    ) : (
+                                        'Commenter information not available'
+                                    )}
+                                </small>
+                                <section className="flex flex-gap">
+                                    {comment.commenterId === userId && (
+                                        <button onClick={() => handleEdit(comment.id, comment.text)}>Edit</button>
+                                    )}
+                                    {(comment.commenterId === userId || userType === 'Admin') && (  // Commenter or Admin can delete
+                                        <button onClick={() => handleDelete(comment.id)}>Delete</button>
+                                    )}
+                                </section>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>No comments yet.</p>
+                )}
+                
+                {editCommentId && (
+                    <form onSubmit={handleUpdateComment}>
+                        <textarea
+                            value={editCommentText}
+                            onChange={(e) => setEditCommentText(e.target.value)}
+                            required
+                            className="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        />
+                        <button type="submit">Update Comment</button>
+                    </form>
+                )}
 
-                            {comment.commenterId === userId && (
-                                <button onClick={() => handleEdit(comment.id, comment.text)}>Edit</button>
-                            )}
-                            {(comment.commenterId === userId || userType === 'Admin') && (  // Commenter or Admin can delete
-                                <button onClick={() => handleDelete(comment.id)}>Delete</button>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No comments yet.</p>
-            )}
-            
-            {editCommentId && (
-                <form onSubmit={handleUpdateComment}>
+                <form onSubmit={handleCommentSubmit}>
                     <textarea
-                        value={editCommentText}
-                        onChange={(e) => setEditCommentText(e.target.value)}
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        placeholder="Write your comment..."
                         required
+                        className="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <button type="submit">Update Comment</button>
+                    <button type="submit">Submit Comment</button>
                 </form>
-            )}
 
-            <form onSubmit={handleCommentSubmit}>
-                <textarea
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="Write your comment..."
-                    required
-                />
-                <button type="submit">Submit Comment</button>
-            </form>
-
-            {error && <p>{error}</p>}
+                {error && <p>{error}</p>}
+            </div>
         </div>
     );
 }

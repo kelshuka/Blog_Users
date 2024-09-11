@@ -17,7 +17,6 @@ function Logout() {
         localStorage.removeItem('userId');
         axios.get(`${BACKEND_URL}/log-out`)
         .then(response => {
-            alert('Logged out successfully');
             navigate('/login');
         })
         .catch(error => {
@@ -26,7 +25,13 @@ function Logout() {
         });
     };
 
-    return <button onClick={handleLogout}>Logout</button>;
+    return (
+        <div className='flex flex-col text-center flex-gap pt-20'>
+            <section>Want to log out?</section>
+            <button onClick={handleLogout} className="text-red-500">Logout</button>
+        </div>
+    );
+         
 }
 
 export default Logout;

@@ -2,33 +2,33 @@
 import { Link } from 'react-router-dom'
 import { Outlet} from 'react-router-dom'
 
-//import './App.css'
+
 
 
 
 function App() {
 
   return (
-    <div className='container'>
-      <header>
+    <div className="flex flex-col min-h-screen">
+      <header className="fixed w-full top-0 bg-gray-800 text-white p-4 flex justify-between items-center shadow-md z-50">
         
-        <section className='navigates'>
-          <nav>
-            <div className='homeBlog'>
-              <button type='button'> <Link to="/homepage"> Home </Link> </button>
-              <button type='button'> <Link to="/blogPage/allposts"> Blog </Link> </button>
-            </div>
 
-            <div className='logOut'>
-              <button type='button'> <Link to="/blogPage/logout"> logout </Link> </button>
-            </div>
-        
-          </nav>
-        </section>
+        <h1 className="text-2xl font-bold">World Reality Blog</h1>
+        <nav className="flex">
+          <div >
+            <Link to="/homepage" className="mr-4 hover:underline"> Home </Link> 
+            <Link to="/blogPage/allposts" className="mr-4 hover:underline"> Blog </Link> 
+          </div>
+
+          <div >
+            <Link to="/blogPage/logout" className="hover:underline"> logout </Link> 
+          </div>
+      
+        </nav>
 
       </header>
       
-      <main>
+      <main className="flex-grow pt-20 pb-16 px-4">
         
         <section className='blogs'>
           
@@ -38,9 +38,9 @@ function App() {
 
       </main>
 
-      <footer>
+      <footer className="fixed bottom-0 w-full bg-gray-800 text-white text-center p-2">
 
-        <div className='footHome'> The World Reality Blog </div>
+        <p>&copy; 2024 World Reality Blog. All rights reserved.</p>
 
       </footer>
     </div>

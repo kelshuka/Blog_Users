@@ -22,7 +22,6 @@ function Login() {
                 localStorage.setItem('userToken', token);  // Store the token in localStorage
                 localStorage.setItem('userType', user.type);  // Store user type
                 localStorage.setItem('userId', user.id);  // Store the user ID
-                alert('Login successful');
                 navigate('/blogPage/allposts');
             } else {
                 throw new Error('User data is missing in response');
@@ -35,27 +34,35 @@ function Login() {
     };
 
     return (
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} className="max-w-md w-full bg-white p-8 shadow-lg rounded-lg space-y-6">
+            <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
             <div>
-                <label>Username</label>
+                <label className="block text-sm font-medium text-gray-700">Username</label>
                 <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
+                    className="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 />
             </div>
             <div>
-                <label>Password</label>
+                <label className="block text-sm font-medium text-gray-700">Password</label>
                 <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    className="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 />
             </div>
-            <button type="submit">Login</button>
-            {error && <p>{error}</p>}
+
+            {error && <p className="text-red-500">{error}</p>}
+
+            <button type="submit" className="w-full bg-green-500 text-black py-2 px-4 rounded-md hover:bg-green-700 transition">
+                Login
+            </button>
+            
         </form>
     );
 }
